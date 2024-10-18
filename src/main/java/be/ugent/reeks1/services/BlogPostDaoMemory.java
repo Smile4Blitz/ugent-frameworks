@@ -1,6 +1,9 @@
-package be.ugent.reeks1;
+package be.ugent.reeks1.services;
 
 import org.springframework.stereotype.Service;
+
+import be.ugent.reeks1.components.BlogPost;
+import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
 
 import java.util.Collection;
 import java.util.HashMap;

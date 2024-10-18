@@ -1,4 +1,4 @@
-package be.ugent.reeks1;
+package be.ugent.reeks1.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +7,10 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import be.ugent.reeks1.components.BlogPost;
+import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
+import be.ugent.reeks1.services.BlogPostDaoMemory;
+import be.ugent.reeks1.services.Metrics;
 import jakarta.websocket.server.PathParam;
 
 import java.util.Collection;
@@ -16,9 +20,11 @@ import java.util.HashMap;
 @RestController
 public class BlogPostController {
     private final BlogPostDaoMemory memory;
+    private final Metrics metrics;
 
-    public BlogPostController(BlogPostDaoMemory m) {
+    public BlogPostController(BlogPostDaoMemory m, Metrics metrics) {
         this.memory = m;
+        this.metrics = metrics;
         BogusBlogPostDaoMemory();
     }
 
@@ -37,13 +43,16 @@ public class BlogPostController {
             }
         }
 
+        metrics.increaseReadCollection();
         return collection.values();
     }
 
     @GetMapping("/blogpost/{id}")
     public BlogPost blogpost_id(@PathVariable("id") Integer id) {
         try {
-            return memory.getPost(id);
+            BlogPost p = memory.getPost(id);
+            metrics.increaseRead();
+            return p;
         } catch (BlogPostNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID " + id + " not found.", e);
         }
@@ -63,6 +72,7 @@ public class BlogPostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
+        metrics.increaseCreate();
         UriComponents uriComponents = uriComponentsBuilder.path("/blogpost/{id}").buildAndExpand(id);       
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
@@ -75,6 +85,7 @@ public class BlogPostController {
             return ResponseEntity.notFound().build();
         }
 
+        metrics.increaseDelete();
         return ResponseEntity.status(201).build();
     }
 
@@ -90,6 +101,7 @@ public class BlogPostController {
             throw new ResponseStatusException(HttpStatus.valueOf(409));
         }
 
+        metrics.increaseUpdate();
         memory.addPost(post);
         return ResponseEntity.status(204).build();
     }

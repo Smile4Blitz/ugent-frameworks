@@ -1,4 +1,4 @@
-package be.ugent.reeks1;
+package be.ugent.reeks1.components;
 
 public final class BlogPost {
     private final Integer id;
