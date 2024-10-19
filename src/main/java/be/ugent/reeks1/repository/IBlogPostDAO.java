@@ -2,8 +2,8 @@ package be.ugent.reeks1.repository;
 
 import java.util.Collection;
 
-import be.ugent.reeks1.components.BlogPost;
-import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
+import be.ugent.reeks1.error.BlogPostNotFoundException;
+import be.ugent.reeks1.model.BlogPost;
 
 public interface IBlogPostDAO {
 

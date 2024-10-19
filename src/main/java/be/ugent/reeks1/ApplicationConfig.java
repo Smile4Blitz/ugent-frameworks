@@ -31,7 +31,7 @@ class ApplicationConfig {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("be.ugent.reeks1.components");
+    factory.setPackagesToScan("be.ugent.reeks1.model");
     factory.setDataSource(dataSource());
     factory.afterPropertiesSet();
 

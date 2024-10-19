@@ -1,9 +1,10 @@
-package be.ugent.reeks1;
+package be.ugent.reeks1.controller;
 
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,13 +19,14 @@ import java.util.Collection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import be.ugent.reeks1.components.BlogPost;
-import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
+import be.ugent.reeks1.error.BlogPostNotFoundException;
+import be.ugent.reeks1.model.BlogPost;
 import be.ugent.reeks1.repository.IBlogPostDAO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(BlogPostTestConfig.class)
 @AutoConfigureWebTestClient
+@ActiveProfiles("test")
 public class BlogPostControllerTest {
     @Autowired
     private WebTestClient wtc;

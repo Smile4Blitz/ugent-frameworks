@@ -1,12 +1,12 @@
-package be.ugent.reeks1;
+package be.ugent.reeks1.controller;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
-import be.ugent.reeks1.components.BlogPost;
-import be.ugent.reeks1.repository.BlogPostDaoMemory;
+import be.ugent.reeks1.model.BlogPost;
 import be.ugent.reeks1.repository.IBlogPostDAO;
+import be.ugent.reeks1.services.BlogPostDaoMemory;
 
 @TestConfiguration
 public class BlogPostTestConfig {

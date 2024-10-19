@@ -1,4 +1,4 @@
-package be.ugent.reeks1.components;
+package be.ugent.reeks1.model;
 
 import java.io.Serializable;
 import jakarta.persistence.Entity;
