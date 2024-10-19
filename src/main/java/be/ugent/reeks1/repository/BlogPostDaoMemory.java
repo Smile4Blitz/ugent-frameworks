@@ -1,4 +1,4 @@
-package be.ugent.reeks1.services;
+package be.ugent.reeks1.repository;
 
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 @Service
-public final class BlogPostDaoMemory {
+public final class BlogPostDaoMemory implements IBlogPostDAO {
     private final HashMap<Integer, BlogPost> collection = new HashMap<>();
 
     public Collection<BlogPost> getCollection() {

@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import be.ugent.reeks1.components.BlogPost;
 import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
-import be.ugent.reeks1.services.BlogPostDaoMemory;
+import be.ugent.reeks1.repository.IBlogPostDAO;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(BlogPostTestConfig.class)
@@ -30,7 +30,7 @@ public class BlogPostControllerTest {
     private WebTestClient wtc;
 
     @Autowired
-    private BlogPostDaoMemory memory;
+    private IBlogPostDAO memory;
 
     @Test
     void readBlogPostsJSON() {

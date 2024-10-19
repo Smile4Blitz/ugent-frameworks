@@ -5,14 +5,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 import be.ugent.reeks1.components.BlogPost;
-import be.ugent.reeks1.services.BlogPostDaoMemory;
+import be.ugent.reeks1.repository.BlogPostDaoMemory;
+import be.ugent.reeks1.repository.IBlogPostDAO;
 
 @TestConfiguration
 public class BlogPostTestConfig {
     @Bean
     @Primary
-    public BlogPostDaoMemory bogusBlogPostDaoMemory() {
-        BlogPostDaoMemory memory = new BlogPostDaoMemory();
+    public IBlogPostDAO bogusBlogPostDaoMemory() {
+        IBlogPostDAO memory = new BlogPostDaoMemory();
 
         memory.addPost(new BlogPost(1, "title", "content"));
         memory.addPost(new BlogPost(2, "abc", "123"));

@@ -1,5 +1,6 @@
 package be.ugent.reeks1.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import be.ugent.reeks1.components.BlogPost;
 import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
-import be.ugent.reeks1.services.BlogPostDaoMemory;
+import be.ugent.reeks1.repository.IBlogPostDAO;
 import be.ugent.reeks1.services.Metrics;
 
 import java.util.Collection;
@@ -18,10 +19,12 @@ import java.util.HashMap;
 
 @RestController
 public class BlogPostController {
-    private final BlogPostDaoMemory memory;
+    private final IBlogPostDAO memory;
     private final Metrics metrics;
 
-    public BlogPostController(BlogPostDaoMemory m, Metrics metrics) {
+    // @Qualifier("blogPostDaoMemory")
+    // @Qualifier("blogPostH2Memory")
+    public BlogPostController(@Qualifier("blogPostH2Memory") IBlogPostDAO m, Metrics metrics) {
         this.memory = m;
         this.metrics = metrics;
     }
@@ -43,7 +46,7 @@ public class BlogPostController {
             metrics.increaseReadCollection();
             return collection.values();
         }
-        
+
         metrics.increaseReadCollection();
         return memory.getCollection();
     }
