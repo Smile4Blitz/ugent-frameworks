@@ -1,6 +1,8 @@
 package be.ugent.reeks1.components;
 
-public final class BlogPost {
+import java.io.Serializable;
+
+public class BlogPost implements Serializable {
     private final Integer id;
     private final String title;
     private final String content;

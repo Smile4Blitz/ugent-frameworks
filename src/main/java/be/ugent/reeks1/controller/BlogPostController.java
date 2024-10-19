@@ -11,7 +11,6 @@ import be.ugent.reeks1.components.BlogPost;
 import be.ugent.reeks1.exceptions.BlogPostNotFoundException;
 import be.ugent.reeks1.services.BlogPostDaoMemory;
 import be.ugent.reeks1.services.Metrics;
-import jakarta.websocket.server.PathParam;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +24,6 @@ public class BlogPostController {
     public BlogPostController(BlogPostDaoMemory m, Metrics metrics) {
         this.memory = m;
         this.metrics = metrics;
-        BogusBlogPostDaoMemory();
     }
 
     @GetMapping("/blogposts")
@@ -41,10 +39,13 @@ public class BlogPostController {
                     continue;
                 }
             }
-        }
 
+            metrics.increaseReadCollection();
+            return collection.values();
+        }
+        
         metrics.increaseReadCollection();
-        return collection.values();
+        return memory.getCollection();
     }
 
     @GetMapping("/blogpost/{id}")
@@ -59,26 +60,27 @@ public class BlogPostController {
     }
 
     @PostMapping("/blogpost/{id}")
-    public ResponseEntity<Void> addBlogpost_id(UriComponentsBuilder uriComponentsBuilder, @PathVariable("id") Integer id ,@RequestBody() BlogPost post) {
-        if(id == null || post == null || !id.equals(post.getId())) {
+    public ResponseEntity<Void> addBlogpost_id(UriComponentsBuilder uriComponentsBuilder,
+            @PathVariable("id") Integer id, @RequestBody() BlogPost post) {
+        if (id == null || post == null || !id.equals(post.getId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        
+
         try {
-            if(!memory.postExists(id)) {
+            if (!memory.postExists(id)) {
                 memory.addPost(post);
             }
-        } catch(Exception ignored) {
+        } catch (Exception ignored) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         metrics.increaseCreate();
-        UriComponents uriComponents = uriComponentsBuilder.path("/blogpost/{id}").buildAndExpand(id);       
+        UriComponents uriComponents = uriComponentsBuilder.path("/blogpost/{id}").buildAndExpand(id);
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 
     @DeleteMapping("/blogpost/{id}")
-    public ResponseEntity<Void> deletePost(@PathParam("id") Integer id) {
+    public ResponseEntity<Void> deletePost(@PathVariable("id") Integer id) {
         try {
             memory.removePost(id);
         } catch (BlogPostNotFoundException ignored) {
@@ -91,7 +93,7 @@ public class BlogPostController {
 
     @PutMapping("/blogpost/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable("id") Integer id, @RequestBody BlogPost post) {
-        if(id != post.getId()) {
+        if (id != post.getId()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
@@ -104,12 +106,5 @@ public class BlogPostController {
         metrics.increaseUpdate();
         memory.addPost(post);
         return ResponseEntity.status(204).build();
-    }
-
-    private void BogusBlogPostDaoMemory() {
-        memory.addPost(new BlogPost(1, "title", "content"));
-        memory.addPost(new BlogPost(2, "abc", "123"));
-        memory.addPost(new BlogPost(3, "def", "456"));
-        memory.addPost(new BlogPost(4, "ghi", "789"));
     }
 }

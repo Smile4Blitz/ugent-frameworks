@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 @Service
-public class BlogPostDaoMemory {
+public final class BlogPostDaoMemory {
     private final HashMap<Integer, BlogPost> collection = new HashMap<>();
 
     public Collection<BlogPost> getCollection() {
@@ -17,12 +17,14 @@ public class BlogPostDaoMemory {
     }
 
     public void addPost(BlogPost n) {
-        this.collection.put(n.getId(),n);
+        this.collection.put(n.getId(), n);
     }
 
     public void removePost(Integer n) throws BlogPostNotFoundException {
-        if(this.collection.remove(n) == null) {
+        if (!(this.collection.containsKey(n))) {
             throw new BlogPostNotFoundException();
+        } else {
+            this.collection.remove(n);
         }
     }
 
