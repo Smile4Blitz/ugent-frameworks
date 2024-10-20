@@ -2,6 +2,7 @@ package be.ugent.reeks1.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponents;
@@ -59,6 +60,7 @@ public class BlogPostController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/blogpost/{id}")
     public ResponseEntity<Void> addBlogpost_id(UriComponentsBuilder uriComponentsBuilder,
             @PathVariable("id") Integer id, @RequestBody() BlogPost post) {
@@ -79,6 +81,7 @@ public class BlogPostController {
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/blogpost/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Integer id) {
         try {
@@ -91,6 +94,7 @@ public class BlogPostController {
         return ResponseEntity.status(201).build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/blogpost/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable("id") Integer id, @RequestBody BlogPost post) {
         if (id != post.getId()) {

@@ -53,9 +53,9 @@ public class BlogPostControllerTest {
 
         try {
             collection = xmlMapper
-                .writer()
-                .withRootName("Collection") // default rootname = "<Values>"
-                .writeValueAsString(blogPosts);
+                    .writer()
+                    .withRootName("Collection") // default rootname = "<Values>"
+                    .writeValueAsString(blogPosts);
 
             wtc
                     .get().uri("/blogposts")
@@ -95,7 +95,7 @@ public class BlogPostControllerTest {
 
     @Test
     @DirtiesContext
-    void postBlogPosts() {
+    void postBlogPosts() throws Exception {
         Integer id = 25;
         String title = "test";
         String testContent = "testContent";
@@ -104,6 +104,7 @@ public class BlogPostControllerTest {
 
         wtc
                 .post().uri("/blogpost/" + id)
+                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
                 .bodyValue(testPost)
                 .exchange()
                 .expectStatus().isCreated()
@@ -129,6 +130,7 @@ public class BlogPostControllerTest {
 
         wtc
                 .put().uri("/blogpost/" + id)
+                .header("Authentication", "Basic YWRtaW46YWRtaW4=")
                 .bodyValue(testPost)
                 .exchange()
                 .expectStatus().isEqualTo(204);
@@ -150,6 +152,7 @@ public class BlogPostControllerTest {
 
         wtc
                 .delete().uri("/blogpost/" + id)
+                .header("Authentication", "Basic YWRtaW46YWRtaW4=")
                 .exchange()
                 .expectStatus().isEqualTo(201);
 
