@@ -1,4 +1,4 @@
-package be.ugent.reeks1;
+package be.ugent.reeks1.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

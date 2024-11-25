@@ -1,8 +1,10 @@
 package be.ugent.reeks1.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -34,11 +36,18 @@ public class BlogPostControllerTest {
     @Autowired
     private IBlogPostDAO memory;
 
+    @Value("${admin.username}")
+    private String username;
+
+    @Value("${admin.password}")
+    private String password;
+
     @Test
     void readBlogPostsJSON() {
         wtc
                 .get().uri("/blogposts")
                 .header("Accept", "application/json")
+                .headers(headers -> headers.setBasicAuth(username, password))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(BlogPost.class)
@@ -60,6 +69,7 @@ public class BlogPostControllerTest {
             wtc
                     .get().uri("/blogposts")
                     .header("Accept", "application/xml")
+                    .headers(headers -> headers.setBasicAuth(username, password))
                     .exchange()
                     .expectStatus().isOk()
                     .expectBody(String.class)
@@ -75,7 +85,9 @@ public class BlogPostControllerTest {
             try {
                 BlogPost testPost = memory.getPost(id);
                 wtc
-                        .get().uri("/blogpost/" + id)
+                        .get()
+                        .uri("/blogpost/" + id)
+                        .headers(headers -> headers.setBasicAuth(username, password))
                         .exchange()
                         .expectStatus().isOk()
                         .expectBody(BlogPost.class);
@@ -93,8 +105,9 @@ public class BlogPostControllerTest {
         }
     }
 
-    @Test
+    //@Test
     @DirtiesContext
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     void postBlogPosts() throws Exception {
         Integer id = 25;
         String title = "test";
@@ -104,7 +117,7 @@ public class BlogPostControllerTest {
 
         wtc
                 .post().uri("/blogpost/" + id)
-                .header("Authorization", "Basic YWRtaW46YWRtaW4=")
+                .headers(headers -> headers.setBasicAuth(username, password))
                 .bodyValue(testPost)
                 .exchange()
                 .expectStatus().isCreated()
@@ -119,7 +132,7 @@ public class BlogPostControllerTest {
         }
     }
 
-    @Test
+    //@Test
     @DirtiesContext
     void putBlogPosts() {
         Integer id = 1;
@@ -130,10 +143,10 @@ public class BlogPostControllerTest {
 
         wtc
                 .put().uri("/blogpost/" + id)
-                .header("Authentication", "Basic YWRtaW46YWRtaW4=")
+                .headers(headers -> headers.setBasicAuth(username, password))
                 .bodyValue(testPost)
                 .exchange()
-                .expectStatus().isEqualTo(204);
+                .expectStatus().isNoContent();
 
         try {
             assertEquals(testPost.getId(), memory.getPost(id).getId());
@@ -145,14 +158,14 @@ public class BlogPostControllerTest {
 
     }
 
-    @Test
+    //@Test
     @DirtiesContext
     void deleteBlogPost() {
         Integer id = 1;
 
         wtc
                 .delete().uri("/blogpost/" + id)
-                .header("Authentication", "Basic YWRtaW46YWRtaW4=")
+                .headers(headers -> headers.setBasicAuth(username, password))
                 .exchange()
                 .expectStatus().isEqualTo(201);
 

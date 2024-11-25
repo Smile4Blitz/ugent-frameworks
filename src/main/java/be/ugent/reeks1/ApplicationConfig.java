@@ -23,7 +23,6 @@ class ApplicationConfig {
 
   @Bean
   public EntityManagerFactory entityManagerFactory() {
-
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
     vendorAdapter.setGenerateDdl(true);
 
@@ -38,7 +37,6 @@ class ApplicationConfig {
 
   @Bean
   public PlatformTransactionManager transactionManager() {
-
     JpaTransactionManager txManager = new JpaTransactionManager();
     txManager.setEntityManagerFactory(entityManagerFactory());
     return txManager;

@@ -25,6 +25,7 @@ public class BlogPostController {
     public BlogPostController(IBlogPostDAO m, Metrics metrics) {
         this.memory = m;
         this.metrics = metrics;
+        this.memory.addPost(new BlogPost(1,"test","content"));
     }
 
     @GetMapping("/blogposts")
@@ -60,7 +61,7 @@ public class BlogPostController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/blogpost/{id}")
     public ResponseEntity<Void> addBlogpost_id(UriComponentsBuilder uriComponentsBuilder,
             @PathVariable("id") Integer id, @RequestBody() BlogPost post) {
